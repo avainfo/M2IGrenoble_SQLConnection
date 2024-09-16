@@ -1,44 +1,30 @@
 package fr.avainfo
 
-import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.Statement
 
 fun main() {
-    val url = "jdbc:mysql://localhost:3306/test_database"
-    val user = "root"
-    val password = "root"
+    val url = "jdbc:mysql://localhost:3306/test_database"  // URL de la base de données
+    val user = "root"  // Nom d'utilisateur
+    val password = "root"  // Mot de passe
 
-    var connection: Connection? = null
-    var statement: Statement? = null
-    var resultSet: ResultSet? = null
+    // Connexion à la base de données et gestion automatique des ressources
+    DriverManager.getConnection(url, user, password).use { connection ->
+        // Création d'un Statement pour exécuter les requêtes SQL
+        connection.createStatement().use { statement ->
+            // Exécution de la requête et récupération des résultats
+            statement.executeQuery("SELECT * FROM employees").use { resultSet ->
+                val employees = mutableListOf<Employee>()  // Liste pour stocker les employés
 
-    try {
-        // Connexion à la base de données
-        connection = DriverManager.getConnection(url, user, password)
+                // Parcours des résultats et ajout à la liste
+                while (resultSet.next()) {
+                    employees.add(resultSet.toEmployee())  // Conversion des résultats en objets Employee
+                }
 
-        // Création d'une requête SQL
-        statement = connection.createStatement()
-        resultSet = statement.executeQuery("SELECT * FROM employees")
-
-        // Parcours des résultats de la requête
-        while (resultSet.next()) {
-            val id = resultSet.getInt("id")
-            val firstName = resultSet.getString("first_name")
-            val lastName = resultSet.getString("last_name")
-            val department = resultSet.getString("department")
-            val hireDate = resultSet.getDate("hire_date")
-            val salary = resultSet.getBigDecimal("salary")
-
-            println("ID: $id, Name: $firstName $lastName, Department: $department, Hire Date: $hireDate, Salary: $salary")
+                // Affichage des employés
+                for (employee in employees) {
+                    println(employee)
+                }
+            }
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    } finally {
-        // Fermeture des ressources
-        resultSet?.close()
-        statement?.close()
-        connection?.close()
     }
 }
