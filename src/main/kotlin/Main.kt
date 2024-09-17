@@ -9,10 +9,13 @@ fun main() {
 
     // Connexion à la base de données et gestion automatique des ressources
     DriverManager.getConnection(url, user, password).use { connection ->
+
         // Création d'un Statement pour exécuter les requêtes SQL
         connection.createStatement().use { statement ->
+
             // Exécution de la requête et récupération des résultats
             statement.executeQuery("SELECT * FROM employees").use { resultSet ->
+
                 val employees = mutableListOf<Employee>()  // Liste pour stocker les employés
 
                 // Parcours des résultats et ajout à la liste
