@@ -11,11 +11,22 @@ data class Employee(
     val salary: java.math.BigDecimal
 )
 
-fun ResultSet.toEmployee(): Employee = Employee(
-    id = getInt("id"),
-    firstName = getString("first_name"),
-    lastName = getString("last_name"),
-    department = getString("department"),
-    hireDate = getDate("hire_date"),
-    salary = getBigDecimal("salary")
-)
+fun ResultSet.toEmployee(): Employee {
+    return Employee(
+        id = getInt("id"),
+        firstName = getString("first_name"),
+        lastName = getString("last_name"),
+        department = getString("department"),
+        hireDate = getDate("hire_date"),
+        salary = getBigDecimal("salary")
+    )
+}
+
+// fun ResultSet.toEmployee(): Employee = Employee(
+//     id = getInt("id"),
+//     firstName = getString("first_name"),
+//     lastName = getString("last_name"),
+//     department = getString("department"),
+//     hireDate = getDate("hire_date"),
+//     salary = getBigDecimal("salary")
+// )
